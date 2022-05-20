@@ -19,9 +19,15 @@ sha256sums=('SKIP')
 #              D81C0CB38EB725EF6691C385BB463350D6EF31EF) # Heiko Becker <heiko.becker@kde.org>
 #options=(debug)
 
+#pkgver() {
+#  cd ${pkgname%-git}
+#  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+#}
+
 pkgver() {
-  cd ${pkgname%-git}
-  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  cd ${srcdir}/${pkgname%-git}
+  _ver="$(cat CMakeLists.txt | grep RELEASE_SERVICE_VERSION | cut -d '"' -f2 | tr '\n' '.' | cut -d "." -f 1-3)"
+  echo "$(echo ${_ver}).r$(git rev-list --count HEAD)"
 }
 
 build() { 
